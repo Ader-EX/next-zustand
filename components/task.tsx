@@ -1,15 +1,27 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
+import { useTaskStore } from '@/lib/store'
 
 export default function Task({
+  id,
   title,
   description,
   status
 }: {
+  id: string
   title: string
-  description: string
+  description?: string
   status: string
 }) {
+  const deleteTask = useTaskStore(state => state.removeTask)
+  const dragTask = useTaskStore(state => state.dragTaskUpdate)
+  const handleDelete = (e: any) => {
+    e.preventDefault()
+    deleteTask(id)
+  }
+  const handleDrag = () => {
+    dragTask(id)
+  }
   return (
     <div
       className={cn(
@@ -20,13 +32,15 @@ export default function Task({
           'border-2 border-emerald-500': status === 'DONE'
         }
       )}
+      onDrag={handleDrag}
+      draggable
     >
       <div>
         <h3 className='font-medium text-gray-700'>{title}</h3>
         <p className='text-sm font-light text-gray-500'>{description}</p>
       </div>
 
-      <button className='cursor-pointer'>
+      <button className='cursor-pointer' onClick={handleDelete}>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 24 24'
