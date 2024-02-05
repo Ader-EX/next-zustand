@@ -3,6 +3,7 @@ import { Status, useTaskStore } from '@/lib/store'
 import Task from './task'
 import { useMemo } from 'react'
 import React from 'react'
+import { useEffect } from 'react'
 export default function Column({
   title,
   status
@@ -18,6 +19,10 @@ export default function Column({
   const updateTask = useTaskStore(state => state.updateTask)
   const draggedTask = useTaskStore(state => state.draggedTask)
   const draggedTaskStatus = useTaskStore(state => state.dragTaskUpdate)
+
+  useEffect(() => {
+    useTaskStore.persist.rehydrate()
+  }, [])
   const handleDrop = (e: any) => {
     if (!draggedTask) return
     updateTask(draggedTask, status)
